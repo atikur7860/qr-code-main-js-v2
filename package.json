@@ -1,6 +1,6 @@
 {
   "name": "qr-code-main-js-v2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "QR code generation and redirect url code",
   "main": "main.js",
   "scripts": {

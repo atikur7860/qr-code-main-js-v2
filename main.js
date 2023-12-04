@@ -4,6 +4,8 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
   const API_URL = "https://dkyc-demos-stag-gcp.vishwamcorp.com/v2";
   let isLoaderDisplayed = false;
 
+  let callBack;
+
   async function createUI() {
 
     const screenHeight = window.screen.height;
@@ -154,7 +156,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
       console.log(resData);
 
-      checkKYCStatus();
+      checkKYCStatus(sessionId);
     } catch (err) {
       console.log(err.message);
     }
@@ -176,17 +178,29 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
       if (resData.session_status === "yet_to_start") {
         // hideLoaderAndShowMessage("KYC not yet started!");
-        checkKYCStatus();
+        setTimeout(() => {
+          checkKYCStatus(sessionId);
+        }, 2000);
       }
 
       if (resData.session_status === "in_progress") {
         if (!isLoaderDisplayed) {
           displayLoader();
         }
-        checkKYCStatus();
+        setTimeout(() => {
+          checkKYCStatus(sessionId);
+        }, 2000);
       }
 
       if (resData.session_status === "completed") {
+        console.log(resData);
+        callBack(resData);
+        closeUI();
+      }
+
+      if (resData.session_status === "failed") {
+        console.log(resData);
+        callBack(resData);
         closeUI();
       }
     } catch (err) {
@@ -194,9 +208,11 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
     }
   }
 
-  window.launchJukshioKYC = async function () {
+  window.launchJukshioKYC = async function (_callBack) {
     let status = await createUI();
     let redirectUrl;
+
+    callBack = _callBack;
 
     const newSessionId = new Date().getTime();
 
@@ -209,8 +225,10 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
         window.location.hostname +
         ":4200/main";
     } else {
-      redirectUrl = "https://manapuram-demo.jukshio.com/main";
+      redirectUrl = "https://manapuram-demo.jukshio.com/auth";
     }
+
+    redirectUrl = "https://manapuram-demo.jukshio.com/auth"
 
     new QRCode(document.getElementById('qrcode'), {
       text: redirectUrl + "?session_token=" + token,

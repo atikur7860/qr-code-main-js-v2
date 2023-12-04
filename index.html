@@ -10,7 +10,12 @@
 </head>
 <script>
     function openQR() {
-        launchJukshioKYC();
+        launchJukshioKYC(handler);
+    }
+
+    function handler(result) {
+        console.log(result);
+
     }
 </script>
 
