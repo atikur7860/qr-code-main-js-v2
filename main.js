@@ -208,15 +208,13 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
     }
   }
 
-  window.launchJukshioKYC = async function (_callBack) {
+  window.launchJukshioKYC = async function (sessionId, _callBack) {
     let status = await createUI();
     let redirectUrl;
 
     callBack = _callBack;
 
-    const newSessionId = new Date().getTime();
-
-    const token = await createToken(newSessionId);
+    const token = await createToken(sessionId);
 
     if (window.location.hostname === "localhost") {
       redirectUrl =
@@ -239,7 +237,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
       correctLevel : QRCode.CorrectLevel.L
     });    
 
-    createSession(newSessionId);
+    createSession(sessionId);
   };
 
   function displayLoader() {
