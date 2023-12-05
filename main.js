@@ -4,6 +4,8 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
   const API_URL = "https://dkyc-demos-stag-gcp.vishwamcorp.com/v2";
   let isLoaderDisplayed = false;
 
+  let isUIClosed = false;
+
   let callBack;
 
   async function createUI() {
@@ -24,7 +26,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
     let content = document.createElement("div");
     content.id = "jukshio-content";
     content.style.width = "25%";
-    content.style.height = "80%";
+    content.style.height = "75%";
     // content.style.marginTop = "30px";
     content.style.position = "absolute";
     content.style.top = "50%";
@@ -80,9 +82,9 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
     loader.id = "jukshio-loader";
     loader.src = loaderGif;
     loader.alt = "Loader";
-    loader.width = "200";
-    loader.height = "200";
-    loader.style.margin = "100px auto 0";
+    loader.width = "100";
+    loader.height = "100";
+    loader.style.margin = "60px auto 0";
     loader.style.display = "none";
 
     content.appendChild(loader);
@@ -94,7 +96,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
     // verificationStartedText.style.marginBottom = '40px';
     // verificationStartedText.style.display = 'none';
     // verificationStartedText.innerText = 'KYC Verification is in progress';
-    //
+
     // content.appendChild(verificationStartedText);
 
     let infoText = document.createElement("p");
@@ -129,6 +131,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
     closeButton.style.padding = "5px 10px";
     closeButton.style.borderRadius = "50%";
     closeButton.style.cursor = "pointer";
+    closeButton.style.backgroundColor = "#d7d7d7";
     closeButton.innerText = "X";
     closeButton.addEventListener("click", closeUI);
 
@@ -176,6 +179,13 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
       console.log(resData);
 
+      if (isUIClosed) {
+        callBack({
+          error: 'Qr code closed before completing request'
+        });
+        return;
+      }
+
       if (resData.session_status === "yet_to_start") {
         // hideLoaderAndShowMessage("KYC not yet started!");
         setTimeout(() => {
@@ -203,6 +213,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
         callBack(resData);
         closeUI();
       }
+
     } catch (err) {
       console.log(err.message);
     }
@@ -211,6 +222,12 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
   window.launchJukshioKYC = async function (sessionId, _callBack) {
     let status = await createUI();
     let redirectUrl;
+
+    if (sessionId === undefined || sessionId === null) {
+      _callBack({
+        error: 'Invalid session_id'
+      })
+    }
 
     callBack = _callBack;
 
@@ -230,8 +247,8 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
     new QRCode(document.getElementById('qrcode'), {
       text: redirectUrl + "?session_token=" + token,
-      width: 300,
-      height: 300,
+      width: 200,
+      height: 200,
       colorDark : '#000',
       colorLight : '#fff',
       correctLevel : QRCode.CorrectLevel.L
@@ -258,6 +275,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
   function closeUI() {
     let body = document.getElementsByTagName("body")[0];
     let container = document.getElementById("jukshio-container");
+    isUIClosed = true;
     body.removeChild(container);
   }
 
