@@ -207,19 +207,22 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
       if (resData.session_status === "completed") {
         console.log(resData);
-        callBack(resData);
         closeUI();
+        callBack(resData);
+        return
       }
 
       if (resData.session_status === "failed") {
         console.log(resData);
-        callBack(resData);
         closeUI();
+        callBack(resData);
+        return;
       }
 
     } catch (err) {
       console.log(err)
       console.log(err.message);
+      closeUI();
     }
   }
 
@@ -282,8 +285,8 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
   function closeUI() {
     let body = document.getElementsByTagName("body")[0];
     let container = document.getElementById("jukshio-container");
-    isUIClosed = true;
     body.removeChild(container);
+    isUIClosed = true;
   }
 
   async function createToken(session_id) {
