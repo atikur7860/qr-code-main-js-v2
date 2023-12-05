@@ -181,7 +181,10 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
       if (isUIClosed) {
         callBack({
-          error: 'Qr code closed before completing request'
+          session_status: 'failed',
+          session_result: {
+            reason: 'Qr code closed before completing request'
+          },
         });
         return;
       }
@@ -215,6 +218,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
       }
 
     } catch (err) {
+      console.log(err)
       console.log(err.message);
     }
   }
@@ -225,7 +229,10 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
     if (sessionId === undefined || sessionId === null) {
       _callBack({
-        error: 'Invalid session_id'
+        session_status: 'failed',
+        session_result: {
+          reason: 'Invalid Session Id'
+        },
       })
     }
 
