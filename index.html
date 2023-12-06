@@ -10,9 +10,15 @@
 </head>
 <script>
     function openQR() {
+        launchJukshioKYC(handler);
+    }
 
-        let sessionId = new Date().getTime();
-        launchJukshioKYC(sessionId, handler);
+    async function pennyDrop() {
+        const data = {
+            account_number: "303602010428062",
+            ifsc_code: "UBIN0530361"
+        }
+        const resp = await jukshioPennyDropApi(data);
     }
 
     function handler(result) {
@@ -24,6 +30,8 @@
 <body>
     <!-- Testing Qr code -->
     <button onclick="openQR()">Open QR</button>
+
+    <button onclick="pennyDrop()">Penny Drop</button>
 
     <script src="./main.js" type="module"></script>
 </body>
