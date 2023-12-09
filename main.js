@@ -231,6 +231,8 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.1.3/index.j
 
     isUIClosed = false;
 
+    console.log('new code')
+
     if (sessionId === undefined || sessionId === null) {
       _callBack({
         session_status: "failed",
