@@ -10,7 +10,8 @@
 </head>
 <script>
     function openQR() {
-        launchJukshioKYC(handler);
+        let sessionId = new Date().getTime();
+        launchJukshioKYC(sessionId, handler);
     }
 
     async function pennyDrop() {
