@@ -2,7 +2,7 @@
   "name": "qr-code-main-js-v2",
   "version": "1.0.1",
   "description": "QR code generation and redirect url code",
-  "main": "main.js",
+  "main": "./main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
